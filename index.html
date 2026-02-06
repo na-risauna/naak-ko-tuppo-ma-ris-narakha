@@ -10,6 +10,40 @@
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+
+/* RANDOM POP IMAGES */
+.pop-img {
+    position: fixed;
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+    animation: popInOut 2s ease forwards;
+    z-index: 999;
+    pointer-events: none;
+}
+
+@keyframes popInOut {
+    0% {
+        transform: scale(0.3);
+        opacity: 0;
+    }
+    20% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    80% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(0.4);
+        opacity: 0;
+    }
+}
+
+
 body {
     height: 100vh;
     display: flex;
@@ -20,7 +54,7 @@ body {
     overflow: hidden;
 }
 
-/* MAIN DASHBOARD — SMALLER + ROUNDER */
+/* MAIN CARD */
 .container {
     width: 350px;
     background: rgba(255,255,255,0.97);
@@ -56,7 +90,7 @@ p {
     margin-bottom: 12px;
 }
 
-/* GIF — SMALLER + SOFT */
+/* GIF */
 .gif-box {
     width: 250px;
     height: 200px;
@@ -78,7 +112,7 @@ p {
     height: 110px;
 }
 
-/* BUTTONS — EXTRA ROUND */
+/* BUTTONS */
 button {
     padding: 14px 34px;
     font-size: 1.15rem;
@@ -87,14 +121,14 @@ button {
     cursor: pointer;
     position: absolute;
     box-shadow: 0 6px 14px rgba(0,0,0,0.25);
-    transition: all 0.25s ease;
+    transition: left 0.35s ease, top 0.35s ease, transform 0.25s ease;
 }
 
 .yes {
     background: #ff4081;
     color: white;
     left: 50%;
-    transform: translateX(-110%);
+    transform: translateX(-110%) scale(1.15);
 }
 
 .no {
@@ -128,7 +162,7 @@ button {
         <img src="img1.gif" alt="Cute GIF">
     </div>
 
-    <div class="button-zone" id="zone">
+    <div class="button-zone">
         <button class="yes" id="yesBtn">Yes🥰</button>
         <button class="no" id="noBtn">No🙄</button>
     </div>
@@ -137,43 +171,91 @@ button {
 <script>
 const noBtn = document.getElementById("noBtn");
 const yesBtn = document.getElementById("yesBtn");
-const zone = document.getElementById("zone");
 const container = document.getElementById("container");
 const message = document.getElementById("message");
 
 const lines = [
- "Are you suuure? 😏","Come on… just one yes 💕","My heart skipped already ❤️",
- "Even the stars say yes ✨","I’ll owe you chocolates 🍫","This is fate 😉",
- "Your smile wins this 💖","Yes looks good on you 😘","No is shy today 😜",
- "Heart says yes already ❤️","Don’t make Cupid cry 🏹","I brought flowers 🌸",
- "This is your sign ✨","Yes = happiness 😍","The universe agrees 🌙",
- "You know you want to 😏","One click away 💘","Magic happens after yes ✨",
- "No is just teasing 😜","Say yes, be legendary ❤️"
+ "Pakka ho😏??","Last time sodeko ni feri😌","Last ko ni last time sodai xu ma🫠",
+ "hera hera risako aajai✨","kulfi kindinxu ni baru🍫","Hyaaa prabhu, bachauuuu🙏",
+ "Baru tornado fries khau, tara bhau nakhau🙄",
+ "Kati ho ka bhau khako pani😔","Bhayo ka kati no thicheko😜",
+ "Yek choti bolda ta kei huna ka❤️","Tir chalauna na paros aaba🏹","Naak ma kei raixa timro, aa ris po ho ki👀",
+ "Yes bhandeu ta aani jadu hera✨","Jun lai competition na deu na feri timi🌙",
+ "Malai thaxa you want to press yes😏","Aaba ta waar ki paar👀","Prabhu samjaunus na waha lai🙄",
+ "Naak ko tuppo mai xa hai ris aajai😔"
 ];
 
 let yesSize = 1.15;
 
-noBtn.addEventListener("click", () => {
-    const maxX = zone.clientWidth - noBtn.offsetWidth - 8;
-    const maxY = zone.clientHeight - noBtn.offsetHeight - 8;
 
-    noBtn.style.left = Math.random() * maxX + "px";
-    noBtn.style.top = Math.random() * maxY + "px";
+let currentImgIndex = 1;
+const TOTAL_IMAGES = 13;
+
+
+// SERIAL IMAGE POPPER (1 → 13 → repeat)
+function popRandomImage() {
+    const img = document.createElement("img");
+
+    img.src = `img${currentImgIndex}.jpg`; // img1.jpg → img13.jpg
+    img.className = "pop-img";
+
+    const maxX = window.innerWidth - 140;
+    const maxY = window.innerHeight - 140;
+
+    img.style.left = Math.random() * maxX + "px";
+    img.style.top = Math.random() * maxY + "px";
+
+    document.body.appendChild(img);
+
+    setTimeout(() => img.remove(), 2000);
+
+    // move to next image
+    currentImgIndex++;
+    if (currentImgIndex > TOTAL_IMAGES) {
+        currentImgIndex = 1;
+    }
+}
+
+let currentLineIndex = 0;
+
+
+noBtn.addEventListener("click", () => {
+    const margin = 16;
+
+    popRandomImage();
+
+    const btnW = noBtn.offsetWidth;
+    const btnH = noBtn.offsetHeight;
+
+    const maxX = window.innerWidth - btnW - margin;
+    const maxY = window.innerHeight - btnH - margin;
+
+    const randomX = Math.random() * maxX + margin;
+    const randomY = Math.random() * maxY + margin;
+
+    noBtn.style.position = "fixed";
+    noBtn.style.left = randomX + "px";
+    noBtn.style.top = randomY + "px";
     noBtn.style.transform = "none";
 
     yesSize += 0.2;
     yesBtn.style.transform = `translateX(-110%) scale(${yesSize})`;
 
-    message.textContent = lines[Math.floor(Math.random() * lines.length)];
+    // SERIAL TEXT
+    message.textContent = lines[currentLineIndex];
+    currentLineIndex++;
+    if (currentLineIndex >= lines.length) currentLineIndex = 0;
 
     container.classList.add("shake");
     setTimeout(() => container.classList.remove("shake"), 350);
 });
 
+
 yesBtn.addEventListener("click", () => {
     window.location.href = "thankyou.html";
 });
 
+/* EMOJI RAIN */
 setInterval(() => {
     const e = document.createElement("div");
     e.className = "emoji";
@@ -182,7 +264,7 @@ setInterval(() => {
     e.textContent = Math.random() > 0.5 ? "❤️" : "✨";
     document.body.appendChild(e);
     setTimeout(() => e.remove(), 9000);
-}, 100);
+}, 120);
 </script>
 
 </body>
