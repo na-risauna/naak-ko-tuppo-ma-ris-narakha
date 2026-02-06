@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Be My Valentine?</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #ffe6f0, #ffccd5);
+    font-family: 'Roboto', sans-serif;
+    overflow: hidden;
+}
+
+/* MAIN DASHBOARD — SMALLER + ROUNDER */
+.container {
+    width: 350px;
+    background: rgba(255,255,255,0.97);
+    padding: 22px 20px;
+    border-radius: 36px;
+    text-align: center;
+    box-shadow: 0 14px 30px rgba(0,0,0,0.18);
+    position: relative;
+    transition: transform 0.2s ease;
+}
+
+/* SHAKE */
+.shake { animation: shake 0.35s; }
+@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    50% { transform: translateX(8px); }
+    75% { transform: translateX(-6px); }
+    100% { transform: translateX(0); }
+}
+
+h1 {
+    font-family: 'Pacifico', cursive;
+    font-size: 2rem;
+    color: #e91e63;
+    margin-bottom: 10px;
+}
+
+p {
+    min-height: 44px;
+    font-size: 1.05rem;
+    color: #444;
+    margin-bottom: 12px;
+}
+
+/* GIF — SMALLER + SOFT */
+.gif-box {
+    width: 250px;
+    height: 200px;
+    margin: 0 auto 18px;
+    overflow: hidden;
+    border-radius: 26px;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.22);
+}
+.gif-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* BUTTON AREA */
+.button-zone {
+    position: relative;
+    width: 100%;
+    height: 110px;
+}
+
+/* BUTTONS — EXTRA ROUND */
+button {
+    padding: 14px 34px;
+    font-size: 1.15rem;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.25);
+    transition: all 0.25s ease;
+}
+
+.yes {
+    background: #ff4081;
+    color: white;
+    left: 50%;
+    transform: translateX(-110%);
+}
+
+.no {
+    background: #e0e0e0;
+    color: #333;
+    left: 50%;
+    transform: translateX(10%);
+}
+
+/* EMOJI RAIN */
+.emoji {
+    position: absolute;
+    top: -40px;
+    font-size: 26px;
+    animation: fall linear forwards;
+    pointer-events: none;
+}
+@keyframes fall {
+    to { transform: translateY(110vh); opacity: 0; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container" id="container">
+    <h1>Will you be my Valentine?</h1>
+    <p id="message"></p>
+
+    <div class="gif-box">
+        <img src="img1.gif" alt="Cute GIF">
+    </div>
+
+    <div class="button-zone" id="zone">
+        <button class="yes" id="yesBtn">Yes🥰</button>
+        <button class="no" id="noBtn">No🙄</button>
+    </div>
+</div>
+
+<script>
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+const zone = document.getElementById("zone");
+const container = document.getElementById("container");
+const message = document.getElementById("message");
+
+const lines = [
+ "Are you suuure? 😏","Come on… just one yes 💕","My heart skipped already ❤️",
+ "Even the stars say yes ✨","I’ll owe you chocolates 🍫","This is fate 😉",
+ "Your smile wins this 💖","Yes looks good on you 😘","No is shy today 😜",
+ "Heart says yes already ❤️","Don’t make Cupid cry 🏹","I brought flowers 🌸",
+ "This is your sign ✨","Yes = happiness 😍","The universe agrees 🌙",
+ "You know you want to 😏","One click away 💘","Magic happens after yes ✨",
+ "No is just teasing 😜","Say yes, be legendary ❤️"
+];
+
+let yesSize = 1.15;
+
+noBtn.addEventListener("click", () => {
+    const maxX = zone.clientWidth - noBtn.offsetWidth - 8;
+    const maxY = zone.clientHeight - noBtn.offsetHeight - 8;
+
+    noBtn.style.left = Math.random() * maxX + "px";
+    noBtn.style.top = Math.random() * maxY + "px";
+    noBtn.style.transform = "none";
+
+    yesSize += 0.2;
+    yesBtn.style.transform = `translateX(-110%) scale(${yesSize})`;
+
+    message.textContent = lines[Math.floor(Math.random() * lines.length)];
+
+    container.classList.add("shake");
+    setTimeout(() => container.classList.remove("shake"), 350);
+});
+
+yesBtn.addEventListener("click", () => {
+    window.location.href = "thankyou.html";
+});
+
+setInterval(() => {
+    const e = document.createElement("div");
+    e.className = "emoji";
+    e.style.left = Math.random() * window.innerWidth + "px";
+    e.style.animationDuration = (Math.random() * 4 + 5) + "s";
+    e.textContent = Math.random() > 0.5 ? "❤️" : "✨";
+    document.body.appendChild(e);
+    setTimeout(() => e.remove(), 9000);
+}, 100);
+</script>
+
+</body>
+</html>
